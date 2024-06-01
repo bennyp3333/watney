@@ -99,7 +99,7 @@
 				"pip3 install aiohttp apa102-pi psutil pyalsaaudio smbus --break-system-packages",
 				"# Clone and set up Watney FIXME branch",
 				"cd /home/pi",
-				"git clone https://github.com/nikivanov/watney.git",
+				"git clone https://github.com/bennyp3333/watney.git",
 				"cd /home/pi/watney",
 				"git checkout bookworm",
 				"cp /home/pi/watney/key.pem /home/pi",
