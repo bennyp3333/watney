@@ -5,6 +5,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
     <title>Watney Rover</title>
+    <style type="text/css">
+		*{
+			font-family: Verdana;
+			text-decoration: none;
+		}
+		#status{
+			text-align: center;
+			font-size: 50pt;
+		}
+		#footer {
+			position: absolute;
+			bottom: 0px;
+			left: 0px;
+		}
+    </style>
     <script type="text/javascript" src="js/jquery.min.js"></script>
     <script type="text/javascript" src="js/ui/jquery-ui.min.js"></script>
     <link rel="stylesheet" type="text/css" href="js/all.css">
@@ -17,10 +32,85 @@
     <script type="text/javascript" src="js/janus.js"></script>
     <script type="text/javascript" src="js/watney_janus.js"></script>
     <script type="text/javascript" src="js/watney.js"></script>
+    <script type="text/javascript" src="js/joystick.js"></script>
+    <script type="text/javascript">
+        window.addEventListener("load", function(){
+        var joystick = new JoyStick({
+            radius: 80,
+            x: window.innerWidth / 2,
+            y: window.innerHeight /2,
+            inner_radius: 70,
+            mouse_support: false
+        });
+        var lastBearing = -1;
+        var status = document.getElementById('status');
+        function run_all_time(){
+            var text = '';
+            if ( joystick.up ) text += 'up ';
+            if ( joystick.down ) text += 'down ';
+            if ( joystick.left ) text += 'left ';
+            if ( joystick.right ) text += 'right';
+
+            var bearing = "0";
+            var look = 0;
+            var slow = false;
+
+            if (joystick.up) {
+                if (joystick.left) {
+                    bearing = "nw";
+                }
+                else if (joystick.right) {
+                    bearing = "ne";
+                }
+                else {
+                    bearing = "n";
+                }
+            }
+            else if (joystick.down) {
+                if (joystick.left) {
+                    bearing = "sw";
+                }
+                else if (joystick.right) {
+                    bearing = "se";
+                }
+                else {
+                    bearing = "s";
+                }
+            }
+            else if (joystick.left) {
+                bearing = "w";
+            }
+            else if (joystick.right) {
+                bearing = "e";
+            }
+
+            if (lastBearing != bearing) {
+                lastBearing = bearing;
+                var commandObj = {
+                    'bearing': bearing,
+                    'look': look,
+                    'slow': slow,
+                };
+
+                $.ajax({
+                    url: '/sendCommand',
+                    type: "POST",
+                    data: JSON.stringify(commandObj),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json"
+                });
+            }
+            status.innerHTML = text;
+            requestAnimationFrame( run_all_time );
+        }
+        run_all_time();
+    });
+    </script>
 </head>
 
 <body style="margin: 0; background-color: black">
-    <div id="joystickContainer"></div>
+    <div id="status">
+    </div>
     <video id="vid" autoplay></video>
     <button id="playButton" style="display: none;"><i class="material-icons">play_arrow</i></button>
     <div id="buttonPanel">
