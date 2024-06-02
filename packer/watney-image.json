@@ -100,8 +100,6 @@
 				"# Clone and set up Watney FIXME branch",
 				"cd /home/pi",
 				"git clone https://github.com/bennyp3333/watney.git",
-				"cd /home/pi/watney",
-				"git checkout bookworm",
 				"cp /home/pi/watney/key.pem /home/pi",
 				"cp /home/pi/watney/cert.pem /home/pi",
 				"chown -R pi /home/pi/watney",
