@@ -62,6 +62,9 @@
       "type": "shell",
       "inline": [
         "# Initial Raspberry Pi Config",
+        "systemctl disable userconfig",
+        "systemctl mask userconfig",
+        "systemctl enable getty@tty1",
         "raspi-config nonint do_change_locale en_US.UTF-8",
         "apt-get -y update",
         "apt-get -y upgrade",
